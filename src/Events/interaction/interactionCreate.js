@@ -6,7 +6,7 @@ module.exports = class extends Event {
 
 	async run(interaction) {
 		if (!interaction.inGuild()) return interaction.reply({ content: 'Commands can only be used within the guild!', ephemeral: true });
-		if (interaction.isCommand()) {
+		if (interaction.isCommand() || interaction.isContextMenu()) {
 			const button = new MessageActionRow()
 				.addComponents(new MessageButton()
 					.setStyle('LINK')
