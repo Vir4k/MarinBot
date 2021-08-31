@@ -1,0 +1,49 @@
+{
+    "name": "Vivy",
+    "description": "Vivy is a discord music bot with a mission to make people happy with songs",
+    "logo": "https://cdn.discordapp.com/avatars/646883045051334677/c5c2cce6dbec972a2086dd5d45eafb7c.png?size=4096",
+    "keywords": [
+        "discord-bot", "discord-music", "discordjs", "erelajs"
+    ],
+    "repository": "https://github.com/Rygent/Vivy",
+    "website": "",
+    "success_url": "https://discord.gg/nW6x9EN",
+    "stack": "container",
+    "env": {
+      "DISCORD_TOKEN": {
+        "description": "Input here token of the bot. Get this value from https://discord.dev/.",
+        "required": true
+      },
+      "CLIENT_OWNERS": {
+        "description": "Input here list of owner id. Ex: 427560XXXXXXXXXXXX,532766XXXXXXXXXXXX",
+        "required": true
+      },
+      "INVITE_CODE": {
+        "description": "Input here guild invite code.",
+        "required": true
+      },
+      "LAVALINK_ID": {
+        "description": "Input here the identifier for the node. (Leave it empty if you don't know)",
+        "required": false
+      },
+      "LAVALINK_HOST": {
+        "description": "Input here the host for the node. Default: localhost",
+        "value": "lava.link",
+        "required": true
+      },
+      "LAVALINK_PORT": {
+        "description": "#Input here the port for the node. Default: 2333",
+        "value": "80",
+        "required": false
+      },
+      "LAVALINK_PASSWORD": {
+        "description": "Input here the password for the node. Default: youshallnotpass",
+        "value": "youshallnotpass",
+        "required": false
+      },
+      "LAVALINK_SECURE": {
+        "description": "Boolean whether the host uses SSL. (Leave it empty if you don't know)",
+        "required": false
+      }
+    }
+}
