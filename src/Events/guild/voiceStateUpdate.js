@@ -6,6 +6,21 @@ module.exports = class extends Event {
 		const player = await this.client.manager?.players.get(newState.guild.id);
 		if (!player) return;
 
+		if (newState.id === this.client.user.id && newState.channel?.type === 'GUILD_STAGE_VOICE') {
+			if (!oldState.channelId) {
+				try {
+					await newState.guild.me.voice.setSuppressed(false);
+				} catch (error) {
+					player.pause(true);
+				}
+			} else if (oldState.suppress !== newState.suppress) {
+				player.pause(newState.suppress);
+			}
+		}
+
+		if (oldState.id === this.client.user.id) return;
+		if (!oldState.guild.me.voice.channelId) return;
+
 		if (!oldState.guild.me.voice.channel?.members.size || oldState.guild.me.voice.channel?.members.size === 1) {
 			const channel = await this.client.channels.cache.get(player.textChannel);
 
