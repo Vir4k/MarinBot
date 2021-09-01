@@ -2,6 +2,7 @@ const Event = require('../../Structures/Event.js');
 const { MessageEmbed } = require('discord.js');
 const { Color } = require('../../Utils/Configuration.js');
 const moment = require('moment');
+require('moment-duration-format');
 
 module.exports = class extends Event {
 
