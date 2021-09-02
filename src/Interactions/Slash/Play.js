@@ -14,34 +14,59 @@ module.exports = class extends Interaction {
 
 	async run(interaction) {
 		const search = interaction.options.getString('query', true);
-		await interaction.deferReply();
 
-		if (!interaction.member?.voice.channel) return interaction.followUp({ content: 'You need to join a voice channel.', ephemeral: true });
-
-		let res;
-		try {
-			res = await this.client.manager.search(search, interaction.user);
-			if (res.loadType === 'LOAD_FAILED') throw res.exception;
-			else if (res.loadType === 'PLAYLIST_LOADED') throw { message: 'Playlists are not supported with this command.' };
-		} catch (err) {
-			return interaction.followUp({ content: `There was an error while searching: ${err.message}`, ephemeral: true });
+		if (!interaction.member?.voice.channel) return interaction.reply({ content: 'You need to join a voice channel!', ephemeral: true });
+		if (this.client.manager?.players.get(interaction.guildId)) {
+			if (interaction.member.voice.channelId !== this.client.manager?.players.get(interaction.guildId).voiceChannel) {
+				return interaction.reply({ content: 'You are not in the same voice channel with me.', ephemeral: true });
+			}
+		}
+		if (interaction.member.voice.channel.full && !interaction.member?.voice.channel) {
+			return interaction.reply({ content: 'I can\'t join because the channel is full!', ephemeral: true });
 		}
 
-		if (res.loadType === 'NO_MATCHES') return interaction.followUp({ content: 'There was no tracks found with that query.', ephemeral: true });
+		let player, result;
+		try {
+			player = this.client.manager.create({
+				guild: interaction.guildId,
+				voiceChannel: interaction.member.voice.channelId,
+				textChannel: interaction.channelId,
+				selfDeafen: true
+			});
+		} catch (error) {
+			this.client.logger.log({ content: error.stack, type: 'error' });
+		}
 
-		const player = this.client.manager.create({
-			guild: interaction.guildId,
-			voiceChannel: interaction.member.voice.channelId,
-			textChannel: interaction.channelId,
-			selfDeafen: true
-		});
+		try {
+			result = await player.search(search, interaction.user);
+			if (!result.loadType === 'LOAD_FAILED') {
+				if (!player.queue.current) player.destroy();
+				this.client.logger.log({ content: result.exception.message || result.exception, type: 'error' });
+			}
+		} catch (error) {
+			this.client.logger.log({ content: error.stack, type: 'error' });
+			return interaction.reply({ content: 'There was an error while searching!', ephemeral: true });
+		}
 
-		player.connect();
-		player.queue.add(res.tracks[0]);
-
-		if (!player.playing && !player.paused && !player.queue.size) player.play();
-
-		return interaction.editReply({ content: `Enqueuing ${res.tracks[0].title}.` });
+		switch (result.loadType) {
+			case 'NO_MATCHES':
+				if (!player.queue.current) player.destroy();
+				return interaction.reply({ content: 'No result was found.' });
+			case 'PLAYLIST_LOADED':
+				if (player.state !== 'CONNECTED') player.connect();
+				player.queue.add(result.tracks);
+				if (!player.playing && !player.paused && player.queue.totalSize === result.tracks.length) await player.play();
+				return interaction.reply({ content: `Queued **${result.tracks.length}** tracks` });
+			default:
+				if (player.state !== 'CONNECTED') player.connect();
+				player.queue.add(result.tracks[0]);
+				if (!player.playing && !player.paused && !player.queue.size) {
+					await player.play();
+					return interaction.reply({ content: 'Successfully started queue.' });
+				} else {
+					return interaction.reply({ content: `Added to queue: ${result.tracks[0].title}` });
+				}
+		}
 	}
 
 };
