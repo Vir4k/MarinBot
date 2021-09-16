@@ -34,6 +34,10 @@ module.exports = class Util {
 		return this.client.owners.includes(target);
 	}
 
+	async loadPlayer() {
+		return await this.client.manager.init(this.client.userId);
+	}
+
 	async loadCommands() {
 		return glob(`${this.directory}Commands/**/*.js`).then(commands => {
 			for (const commandFile of commands) {
