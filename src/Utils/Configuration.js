@@ -9,6 +9,12 @@ module.exports = {
 	Color: {
 		DEFAULT: '2f3136'
 	},
+	Emoji: {
+		ONLINE: '<:online:712397262256472075>',
+		IDLE: '<:idle:712397201955094708>',
+		DND: '<:dnd:712397154836283392>',
+		OFFLINE: '<:offline:712397086100029440>'
+	},
 	Lavalink: {
 		identifier: process.env.LAVALINK_ID || 'Lavalink',
 		host: process.env.LAVALINK_HOST,
