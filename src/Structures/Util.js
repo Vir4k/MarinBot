@@ -1,6 +1,8 @@
 const path = require('path');
 const { promisify } = require('util');
 const glob = promisify(require('glob'));
+const { REST } = require('@discordjs/rest');
+const { Routes } = require('discord-api-types/v9');
 const Command = require('./Command.js');
 const Interaction = require('./Interaction.js');
 const Event = require('./Event.js');
@@ -61,7 +63,8 @@ module.exports = class Util {
 				const interaction = new File(this.client, name.toLowerCase());
 				if (!(interaction instanceof Interaction)) throw new TypeError(`Interaction ${name} doesn't belong in Interactions.`);
 				this.client.interactions.set(interaction.name, interaction);
-				this.client.application?.commands.create(interaction);
+				const rest = new REST({ version: '9' }).setToken(this.client.token);
+				rest.post(Routes.applicationCommands(this.client.userId), { body: interaction });
 			}
 		});
 	}

@@ -7,7 +7,7 @@ module.exports = class extends Interaction {
 			name: 'play',
 			description: 'Play a song in your voice channel',
 			options: [
-				{ type: 'STRING', name: 'query', description: 'A search term or a link', required: true }
+				{ type: 3, name: 'query', description: 'A search term or a link', required: true }
 			]
 		});
 	}

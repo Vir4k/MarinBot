@@ -12,7 +12,6 @@ module.exports = class extends Event {
 
 	async run() {
 		await this.client.manager.init(this.client.user.id);
-		await this.client.utils.loadInteractions();
 
 		this.client.logger.log({ content: `Logged in as ${chalk.redBright(`${this.client.user.tag}`)}` });
 		this.client.logger.log({ content: `Loaded ${this.client.commands.size.formatNumber()} commands, ${this.client.interactions.size.formatNumber()} interactions & ${this.client.events.size.formatNumber()} events!` });
