@@ -13,7 +13,6 @@ module.exports = {
 		identifier: process.env.LAVALINK_ID || 'Lavalink',
 		host: process.env.LAVALINK_HOST,
 		port: Number(process.env.LAVALINK_PORT),
-		password: process.env.LAVALINK_PASSWORD,
-		secure: Boolean(process.env.LAVALINK_SECURE)
+		password: process.env.LAVALINK_PASSWORD
 	}
 };

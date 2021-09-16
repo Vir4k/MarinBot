@@ -40,10 +40,6 @@
         "description": "Input here the password for the node. Default: youshallnotpass",
         "value": "youshallnotpass",
         "required": false
-      },
-      "LAVALINK_SECURE": {
-        "description": "Boolean whether the host uses SSL. (Leave it empty if you don't know)",
-        "required": false
       }
     }
 }
