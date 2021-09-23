@@ -1,11 +1,11 @@
-const Interaction = require('../../Structures/Interaction.js');
+const Interaction = require('../../../Structures/Interaction.js');
 
 module.exports = class extends Interaction {
 
 	constructor(...args) {
 		super(...args, {
-			name: 'resume',
-			description: 'Resume the music'
+			name: 'stop',
+			description: 'Stops the music'
 		});
 	}
 
@@ -21,12 +21,10 @@ module.exports = class extends Interaction {
 			return interaction.followUp({ content: 'You need to join a voice channel.', ephemeral: true });
 		} else if (interaction.member?.voice.channelId !== player.voiceChannel) {
 			return interaction.followUp({ content: 'You\'re not in the same voice channel.', ephemeral: true });
-		} else if (!player.paused) {
-			return interaction.followUp({ content: 'Songs are already being played/the songs are not paused.', ephemeral: true });
 		}
 
-		player.pause(false);
-		return interaction.editReply({ content: 'Songs are being played again.' });
+		player.destroy();
+		return interaction.editReply({ content: 'Music has been stopped.' });
 	}
 
 };

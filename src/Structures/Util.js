@@ -34,7 +34,7 @@ module.exports = class Util {
 		return this.client.owners.includes(target);
 	}
 
-	async loadPlayer() {
+	async loadPlayers() {
 		return await this.client.manager.init(this.client.userId);
 	}
 
@@ -58,7 +58,7 @@ module.exports = class Util {
 	}
 
 	async loadInteractions() {
-		return glob(`${this.directory}Interactions/**/*.js`).then(interactions => {
+		return glob(`${this.directory}Commands/Interaction/**/*.js`).then(interactions => {
 			for (const interactionFile of interactions) {
 				delete require.cache[interactionFile];
 				const { name } = path.parse(interactionFile);

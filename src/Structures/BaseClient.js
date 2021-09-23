@@ -66,7 +66,7 @@ module.exports = class BaseClient extends Client {
 		this.utils.loadInteractions();
 		this.utils.loadCommands();
 		this.utils.loadEvents();
-		this.utils.loadPlayer();
+		this.utils.loadPlayers();
 		super.login(token);
 	}
 

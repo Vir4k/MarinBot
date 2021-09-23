@@ -1,6 +1,6 @@
-const Interaction = require('../../Structures/Interaction.js');
+const Interaction = require('../../../Structures/Interaction.js');
 const { MessageActionRow, MessageButton } = require('discord.js');
-const { Access } = require('../../Utils/Configuration.js');
+const { Access } = require('../../../Utils/Configuration.js');
 
 module.exports = class extends Interaction {
 
