@@ -1,4 +1,4 @@
-const Command = require('../../Structures/Command.js');
+const Command = require('../../../Structures/Command.js');
 const { MessageAttachment } = require('discord.js');
 const { Type } = require('@anishshobith/deeptype');
 const { inspect } = require('util');
