@@ -17,7 +17,7 @@ module.exports = {
 		OFFLINE: '<:offline:712397086100029440>'
 	},
 	Lavalink: {
-		identifier: process.env.LAVALINK_ID || 'Lavalink',
+		identifier: process.env.LAVALINK_ID,
 		host: process.env.LAVALINK_HOST,
 		port: Number(process.env.LAVALINK_PORT),
 		password: process.env.LAVALINK_PASSWORD
