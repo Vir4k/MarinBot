@@ -17,6 +17,6 @@ WORKDIR /home/app
 COPY .env.example .env
 
 # Installing required dependencies
-RUN yarn install
+RUN yarn install --frozen-lockfile
 
 CMD ["node", "."]
