@@ -1,6 +1,6 @@
 module.exports = {
 	token: process.env.DISCORD_TOKEN,
-	userId: process.env.CLIENT_ID,
+	applicationId: process.env.CLIENT_ID,
 	owners: process.env.CLIENT_OWNERS.split(','),
 	Access: {
 		InviteCode: process.env.INVITE_CODE,

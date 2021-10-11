@@ -35,7 +35,7 @@ module.exports = class Util {
 	}
 
 	async loadPlayers() {
-		return await this.client.manager.init(this.client.userId);
+		return await this.client.manager.init(this.client.applicationId);
 	}
 
 	async loadCommands() {
@@ -68,7 +68,7 @@ module.exports = class Util {
 				if (!(interaction instanceof Interaction)) throw new TypeError(`Interaction ${name} doesn't belong in Interactions.`);
 				this.client.interactions.set(interaction.name, interaction);
 				const rest = new REST({ version: '9' }).setToken(this.client.token);
-				rest.post(Routes.applicationCommands(this.client.userId), { body: interaction });
+				rest.post(Routes.applicationCommands(this.client.applicationId), { body: interaction });
 			}
 		});
 	}

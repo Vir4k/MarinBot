@@ -54,8 +54,8 @@ module.exports = class BaseClient extends Client {
 		if (!options.token) throw new Error('You must pass the token for the Client.');
 		this.token = options.token;
 
-		if (!options.userId) throw new Error('You must pass the id of the Client.');
-		this.userId = options.userId;
+		if (!options.applicationId) throw new Error('You must pass the id of the Client.');
+		this.applicationId = options.applicationId;
 
 		if (!options.owners) throw new Error('You must pass a list of owners for the Client.');
 		if (!Array.isArray(options.owners)) throw new TypeError('Owners should be a type of Array<String>.');
