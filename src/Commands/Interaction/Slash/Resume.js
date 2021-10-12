@@ -1,4 +1,5 @@
 const Interaction = require('../../../Structures/Interaction.js');
+const { GuildMember } = require('discord.js');
 
 module.exports = class extends Interaction {
 
@@ -10,23 +11,20 @@ module.exports = class extends Interaction {
 	}
 
 	async run(interaction) {
+		if (!(interaction.member instanceof GuildMember) || !interaction.member.voice.channel) {
+			return await interaction.reply({ content: 'You\'re not in a voice channel!', ephemeral: true });
+		}
+
+		if (interaction.guild.me.voice.channelId && interaction.member.voice.channelId !== interaction.guild.me.voice.channelId) {
+			return await interaction.reply({ content: 'You\'re not in the same voice channel!', ephemeral: true });
+		}
+
 		await interaction.deferReply();
-
 		const player = this.client.manager.players.get(interaction.guildId);
-		if (!player) {
-			return interaction.editReply({ content: 'No song is being currently played in this server.' });
-		}
+		if (!player || !player.playing) return await interaction.editReply({ content: '❌ | No music is being played!' });
 
-		if (!interaction.member?.voice.channel) {
-			return interaction.followUp({ content: 'You need to join a voice channel.', ephemeral: true });
-		} else if (interaction.member?.voice.channelId !== player.voiceChannel) {
-			return interaction.followUp({ content: 'You\'re not in the same voice channel.', ephemeral: true });
-		} else if (!player.paused) {
-			return interaction.followUp({ content: 'Songs are already being played/the songs are not paused.', ephemeral: true });
-		}
-
-		player.pause(false);
-		return interaction.editReply({ content: 'Songs are being played again.' });
+		await player.pause(false);
+		return await interaction.editReply({ content: '▶ | Resumed!' });
 	}
 
 };

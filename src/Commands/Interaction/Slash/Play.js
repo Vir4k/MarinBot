@@ -1,4 +1,5 @@
 const Interaction = require('../../../Structures/Interaction.js');
+const { GuildMember } = require('discord.js');
 
 module.exports = class extends Interaction {
 
@@ -15,23 +16,27 @@ module.exports = class extends Interaction {
 	async run(interaction) {
 		const search = interaction.options.getString('query', true);
 
-		if (!interaction.member?.voice.channel) return interaction.reply({ content: 'You need to join a voice channel!', ephemeral: true });
-		if (this.client.manager?.players.get(interaction.guildId)) {
-			if (interaction.member.voice.channelId !== this.client.manager?.players.get(interaction.guildId).voiceChannel) {
-				return interaction.reply({ content: 'You are not in the same voice channel with me.', ephemeral: true });
-			}
-		}
-		if (interaction.member.voice.channel.full && !interaction.member?.voice.channel) {
-			return interaction.reply({ content: 'I can\'t join because the channel is full!', ephemeral: true });
+		if (!(interaction.member instanceof GuildMember) || !interaction.member.voice.channel) {
+			return await interaction.reply({ content: 'You\'re not in a voice channel!', ephemeral: true });
 		}
 
+		if (interaction.guild.me.voice.channelId && interaction.member.voice.channelId !== interaction.guild.me.voice.channelId) {
+			return await interaction.reply({ content: 'You\'re not in the same voice channel!', ephemeral: true });
+		}
+
+		if (interaction.member.voice.channel.full && !interaction.member.voice.channel) {
+			return await interaction.reply({ content: 'I can\'t join because the channel is full!', ephemeral: true });
+		}
+
+		await interaction.deferReply();
 		let player, result;
 		try {
 			player = this.client.manager.create({
 				guild: interaction.guildId,
 				voiceChannel: interaction.member.voice.channelId,
 				textChannel: interaction.channelId,
-				selfDeafen: true
+				selfDeafen: true,
+				volume: 100
 			});
 		} catch (error) {
 			this.client.logger.log({ content: error.stack, type: 'error' });
@@ -45,27 +50,25 @@ module.exports = class extends Interaction {
 			}
 		} catch (error) {
 			this.client.logger.log({ content: error.stack, type: 'error' });
-			return interaction.reply({ content: 'There was an error while searching!', ephemeral: true });
+			return await interaction.editReply({ content: 'There was an error while searching!' });
 		}
 
 		switch (result.loadType) {
 			case 'NO_MATCHES':
 				if (!player.queue.current) player.destroy();
-				return interaction.reply({ content: 'No result was found.' });
+				return await interaction.editReply({ content: 'No results were found!' });
 			case 'PLAYLIST_LOADED':
 				if (player.state !== 'CONNECTED') player.connect();
 				player.queue.add(result.tracks);
+
 				if (!player.playing && !player.paused && player.queue.totalSize === result.tracks.length) await player.play();
-				return interaction.reply({ content: `Queued **${result.tracks.length}** tracks` });
+				return await interaction.editReply({ content: `🎶 | Playlist **${result.tracks.title}** queued!` });
 			default:
 				if (player.state !== 'CONNECTED') player.connect();
 				player.queue.add(result.tracks[0]);
-				if (!player.playing && !player.paused && !player.queue.size) {
-					await player.play();
-					return interaction.reply({ content: 'Successfully started queue.' });
-				} else {
-					return interaction.reply({ content: `Added to queue: ${result.tracks[0].title}` });
-				}
+
+				if (!player.playing && !player.paused && !player.queue.size) await player.play();
+				return await interaction.editReply({ content: `🎶 | Track **${result.tracks[0].title}** queued!` });
 		}
 	}
 
