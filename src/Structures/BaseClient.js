@@ -1,7 +1,7 @@
-const { Client, Collection, Intents } = require('discord.js');
+const { Client, Collection, Intents, Permissions } = require('discord.js');
 const { Manager } = require('erela.js');
-const { Lavalink } = require('../Utils/Configuration.js');
-const Util = require('./Util.js');
+const Util = require('./Util');
+require('./ClientPlayer');
 
 module.exports = class BaseClient extends Client {
 
@@ -21,14 +21,15 @@ module.exports = class BaseClient extends Client {
 
 		this.commands = new Collection();
 		this.aliases = new Collection();
-		this.interactions = new Collection();
 		this.events = new Collection();
+		this.interactions = new Collection();
+		this.cooldowns = new Collection();
 		this.utils = new Util(this);
 
-		this.logger = require('../Modules/Logger.js');
+		this.logger = require('../Modules/Logger');
 
 		this.manager = new Manager({
-			nodes: [Lavalink],
+			nodes: JSON.parse(this.nodes),
 			send: (id, payload) => {
 				const guild = this.guilds.cache.get(id);
 				if (guild) guild.shard.send(payload);
@@ -37,11 +38,11 @@ module.exports = class BaseClient extends Client {
 		});
 
 		String.prototype.toProperCase = function () {
-			return this.replace(/([^\W_]+[^\s-]*) */g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+			return this.replace(/([^\W_]+[^\s-]*) */g, (txt) => txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase());
 		};
 
-		Number.prototype.formatNumber = function () {
-			return this.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+		String.prototype.toSentenceCase = function () {
+			return this.toLowerCase().replace(/(^\s*\w|[.!?]\s*\w)/g, (txt) => txt.toUpperCase());
 		};
 	}
 
@@ -54,19 +55,25 @@ module.exports = class BaseClient extends Client {
 		if (!options.token) throw new Error('You must pass the token for the Client.');
 		this.token = options.token;
 
-		if (!options.applicationId) throw new Error('You must pass the id of the Client.');
-		this.applicationId = options.applicationId;
+		if (!options.prefix) throw new Error('You must pass a prefix for the Client.');
+		if (typeof options.prefix !== 'string') throw new TypeError('Prefix should be a type of String.');
+		this.prefix = options.prefix;
 
-		if (!options.owners) throw new Error('You must pass a list of owners for the Client.');
+		if (!options.owners || options.owners[0] === '') throw new Error('You must pass a list of owners for the Client.');
 		if (!Array.isArray(options.owners)) throw new TypeError('Owners should be a type of Array<String>.');
 		this.owners = options.owners;
+
+		if (!options.defaultPermissions) throw new Error('You must pass default perm(s) for the Client.');
+		this.defaultPermissions = new Permissions(options.defaultPermissions).freeze();
+
+		if (!options.nodes) throw new Error('You must pass the lavalink nodes for the Client.');
+		this.nodes = options.nodes;
 	}
 
 	async start(token = this.token) {
-		this.utils.loadInteractions();
 		this.utils.loadCommands();
 		this.utils.loadEvents();
-		this.utils.loadPlayers();
+		this.utils.loadInteractions();
 		super.login(token);
 	}
 

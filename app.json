@@ -1,49 +1,40 @@
 {
-    "name": "Vivy",
-    "description": "Vivy is a discord music bot with a mission to make people happy with songs",
-    "logo": "https://cdn.discordapp.com/avatars/646883045051334677/c5c2cce6dbec972a2086dd5d45eafb7c.png?size=4096",
+    "name": "Marin",
+    "description": "Marin is a discord music bot with a mission to make people happy with songs",
+    "logo": "https://cdn.discordapp.com/avatars/646883045051334677/0a864581dfc8dc878242f8b32e9b6d0b.png?size=4096",
     "keywords": [
         "discord-bot", "discord-music", "discordjs", "erelajs"
     ],
-    "repository": "https://github.com/Rygent/Vivy",
+    "repository": "https://github.com/Rygent/MarinBot",
     "website": "",
-    "success_url": "https://discord.gg/nW6x9EN",
+    "success_url": "https://discord.gg/FD5MMabf8Y",
     "stack": "container",
     "env": {
       "DISCORD_TOKEN": {
         "description": "Input here token of the bot. Get this value from https://discord.dev/.",
         "required": true
       },
-      "CLIENT_ID": {
-        "description": "Input here id of the bot. Ex: 886367XXXXXXXXXXXX",
-        "required": true
+      "CLIENT_PREFIX": {
+        "description": "Input here the prefix for your bot.",
+        "value": "?",
+        "require": true
       },
       "CLIENT_OWNERS": {
         "description": "Input here list of owner id. Ex: 427560XXXXXXXXXXXX,532766XXXXXXXXXXXX",
         "required": true
       },
-      "INVITE_CODE": {
-        "description": "Input here guild invite code.",
+      "INVITE_LINK": {
+        "description": "Input here guild invite link.",
         "required": true
       },
-      "LAVALINK_ID": {
-        "description": "Input here the identifier for the node. (Leave it empty if you don't know)",
-        "required": false
-      },
-      "LAVALINK_HOST": {
-        "description": "Input here the host for the node. Default: localhost",
-        "value": "lava.link",
+      "TIMEZONE": {
+        "description": "Input here your timezone.",
         "required": true
       },
-      "LAVALINK_PORT": {
-        "description": "#Input here the port for the node. Default: 2333",
-        "value": "80",
-        "required": false
-      },
-      "LAVALINK_PASSWORD": {
-        "description": "Input here the password for the node. Default: youshallnotpass",
-        "value": "youshallnotpass",
-        "required": false
+      "LAVALINK_NODE": {
+        "description": "Input here the lavalink node.",
+        "value": "[{'host':'lava.link','port':80,'password':'youshallnotpass'}]",
+        "required": true
       }
     }
 }

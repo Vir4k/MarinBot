@@ -1,26 +1,20 @@
-const Command = require('../../../Structures/Command.js');
+const Command = require('../../../Structures/Command');
 
 module.exports = class extends Command {
 
 	constructor(...args) {
 		super(...args, {
 			aliases: ['pong'],
-			description: 'Shows Bot latency & API response time.',
+			description: 'Send a ping request.',
 			category: 'Utilities'
 		});
 	}
 
 	async run(message) {
-		const latency = Math.round(Date.now() - message.createdTimestamp);
-
-		if (latency <= 0) {
-			return message.reply({ content: 'Please try again later!' });
-		} else {
-			return message.reply({ content: [
-				`💓 ***Heartbeat:*** \`${Math.round(this.client.ws.ping)}ms\``,
-				`⏱️ ***Latency:*** \`${latency}ms\``
-			].join('\n') });
-		}
+		return message.reply({ content: [
+			`***Websocket:*** \`${Math.round(this.client.ws.ping)}ms\``,
+			`***REST:*** \`${Math.round(Date.now() - message.createdTimestamp)}ms\``
+		].join('\n') });
 	}
 
 };

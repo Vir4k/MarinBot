@@ -1,9 +1,9 @@
-const Event = require('../../Structures/Event.js');
+const Event = require('../../Structures/Event');
 
 module.exports = class extends Event {
 
-	async run(data) {
-		this.client.manager.updateVoiceState(data);
+	async run(d) {
+		this.client.manager.updateVoiceState(d);
 	}
 
 };

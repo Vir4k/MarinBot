@@ -8,8 +8,9 @@ module.exports = class extends Event {
 		});
 	}
 
-	async run(player, track) {
-		player.addPreviousSong(track);
+	// eslint-disable-next-line no-unused-vars
+	async run(player, track, payload) {
+		await player.stop();
 	}
 
 };

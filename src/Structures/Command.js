@@ -1,3 +1,5 @@
+const { Permissions } = require('discord.js');
+
 module.exports = class Command {
 
 	constructor(client, name, options = {}) {
@@ -7,8 +9,11 @@ module.exports = class Command {
 		this.description = options.description || 'No description provided.';
 		this.category = options.category || 'Miscellaneous';
 		this.usage = options.usage || '';
+		this.memberPermissions = new Permissions(options.memberPermissions).freeze();
+		this.clientPermissions = new Permissions(options.clientPermissions).freeze();
 		this.ownerOnly = options.ownerOnly || false;
 		this.disabled = options.disabled || false;
+		this.cooldown = options.cooldown || 3000;
 	}
 
 	// eslint-disable-next-line no-unused-vars

@@ -1,5 +1,5 @@
-const Command = require('../../../Structures/Command.js');
-const { MessageAttachment } = require('discord.js');
+const Command = require('../../../Structures/Command');
+const { Formatters, MessageAttachment } = require('discord.js');
 const { Type } = require('@anishshobith/deeptype');
 const { inspect } = require('util');
 
@@ -7,7 +7,7 @@ module.exports = class extends Command {
 
 	constructor(...args) {
 		super(...args, {
-			aliases: ['evaluate'],
+			aliases: ['eval'],
 			description: 'Evaluating javascript language code.',
 			category: 'Developer',
 			usage: '[code]',
@@ -28,9 +28,9 @@ module.exports = class extends Command {
 			}
 			const stop = process.hrtime(start);
 			const response = [
-				`**Output:** \`\`\`js\n${this.clean(inspect(evaled, { depth: 0 }))}\n\`\`\``,
-				`**Type:** \`\`\`ts\n${new Type(evaled).is}\n\`\`\``,
-				`**Time Taken:** \`\`\`${(((stop[0] * 1e9) + stop[1])) / 1e6}ms\`\`\``
+				`**Output:** ${Formatters.codeBlock('js', this.clean(inspect(evaled, { depth: 0 })))}`,
+				`**Type:** ${Formatters.inlineCode(new Type(evaled).is)}`,
+				`**Time:** ${Formatters.inlineCode(`${(((stop[0] * 1e9) + stop[1])) / 1e6}ms`)}`
 			];
 			const res = response.join('\n');
 			if (res.length < 2000) {
@@ -40,7 +40,7 @@ module.exports = class extends Command {
 				await message.channel.send({ files: [output] });
 			}
 		} catch (err) {
-			return message.channel.send({ content: `Error:\`\`\`xl\n${this.clean(err)}\n\`\`\`` });
+			return message.channel.send({ content: `**Error:** ${Formatters.codeBlock('xl', this.clean(err))}` });
 		}
 	}
 

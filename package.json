@@ -1,7 +1,6 @@
 {
-  "name": "vivy",
-  "version": "1.0.0",
-  "description": "Vivy is a discord music bot with a mission to make people happy with songs",
+  "name": "marin",
+  "version": "1.1.0",
   "main": "src/index.js",
   "scripts": {
     "start": "node .",
@@ -9,38 +8,26 @@
     "lint:fix": "eslint . --ext .js --fix",
     "update": "yarn upgrade-interactive --latest"
   },
-  "keywords": [
-    "discord-bot",
-    "discord-music",
-    "discordjs",
-    "erelajs"
-  ],
-  "repository": "https://github.com/Rygent/Vivy.git",
-  "bugs": {
-    "url": "https://github.com/Rygent/Vivy/issues"
-  },
-  "homepage": "https://github.com/Rygent/Vivy#readme",
   "author": "Rygent",
   "license": "GPL-3.0",
   "private": true,
   "devDependencies": {
-    "eslint": "^8.0.1",
-    "eslint-config-tesseract": "^0.3.0"
+    "eslint": "^8.8.0"
   },
   "dependencies": {
     "@anishshobith/deeptype": "^1.1.0",
-    "@discordjs/rest": "^0.1.1-canary.0",
     "chalk": "^4.1.2",
-    "discord-api-types": "^0.24.0",
-    "discord.js": "^13.2.0",
-    "dotenv": "^10.0.0",
+    "discord.js": "^13.6.0",
+    "dotenv": "^16.0.0",
     "erela.js": "^2.3.3",
     "glob": "^7.2.0",
     "moment": "^2.29.1",
     "moment-duration-format": "^2.3.2",
-    "os": "^0.1.2",
+    "moment-timezone": "^0.5.34",
     "path": "^0.12.7",
     "semver": "^7.3.5",
-    "util": "^0.12.4"
+    "systeminformation": "^5.11.1",
+    "util": "^0.12.4",
+    "youtube-search-api": "^1.0.11"
   }
 }

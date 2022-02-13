@@ -1,8 +1,5 @@
-const Event = require('../../Structures/Event.js');
-const { MessageEmbed } = require('discord.js');
-const { Color } = require('../../Utils/Configuration.js');
-const moment = require('moment');
-require('moment-duration-format');
+const Event = require('../../Structures/Event');
+const { Formatters } = require('discord.js');
 
 module.exports = class extends Event {
 
@@ -14,21 +11,9 @@ module.exports = class extends Event {
 
 	async run(player, track) {
 		const channel = await this.client.channels.cache.get(player.textChannel);
+		channel.send({ content: `▶ | Started playing: **${track.title}** in ${Formatters.channelMention(player.voiceChannel)}!` });
 
-		const embed = new MessageEmbed()
-			.setColor(Color.DEFAULT)
-			.setAuthor('Now playing')
-			.setTitle(track.title)
-			.setURL(track.uri)
-			.setDescription([
-				`***Author:*** ${track.author}`,
-				`***Duration:*** ${track.isStream ? 'LIVE STREAM' : moment.duration(track.duration).format('HH:mm:ss')}`,
-				`***Queue:*** \`${player.queue.length}\` left`,
-				`***Requested by:*** <@${track.requester.id}>`
-			].join('\n'))
-			.setFooter(`Powered by ${this.client.user.username}`, track.requester.displayAvatarURL({ dynamic: true }));
-
-		return channel.send({ embeds: [embed] });
+		if (player.timeout !== null) return clearTimeout(player.timeout);
 	}
 
 };

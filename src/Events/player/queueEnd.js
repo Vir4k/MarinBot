@@ -1,4 +1,5 @@
-const Event = require('../../Structures/Event.js');
+const Event = require('../../Structures/Event');
+const { Formatters } = require('discord.js');
 
 module.exports = class extends Event {
 
@@ -8,23 +9,13 @@ module.exports = class extends Event {
 		});
 	}
 
-	async run(player, track) {
-		const channel = await this.client.channels.cache.get(player.textChannel);
+	async run(player) {
+		player.timeout = setTimeout(async () => {
+			const channel = await this.client.channels.cache.get(player.textChannel);
+			channel.send({ content: `I left ${Formatters.channelMention(player.voiceChannel)} because I was inactive for too long.` });
 
-		if (!player.get('autoplay')) {
-			await player.destroy();
-			return channel.send({ content: 'No more songs to play. Left the voice channel.' });
-		} else {
-			const mixURL = `https://www.youtube.com/watch?v=${track.identifier}&list=RD${track.identifier}`;
-			const result = await player.search(mixURL, this.client.user);
-
-			if (!result || result.loadType === 'LOAD_FAILED' || result.loadType !== 'PLAYLIST_LOADED') {
-				channel.send({ content: 'Music stopped. No related song was found.' });
-				return player.destroy();
-			}
-			player.queue.add(result.tracks[1]);
-			return player.play();
-		}
+			player.destroy();
+		}, 300_000);
 	}
 
 };

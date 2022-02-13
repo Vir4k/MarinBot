@@ -1,4 +1,4 @@
-const Event = require('../../Structures/Event.js');
+const Event = require('../../Structures/Event');
 
 module.exports = class extends Event {
 
@@ -10,7 +10,7 @@ module.exports = class extends Event {
 
 	// eslint-disable-next-line no-unused-vars
 	async run(node, reason) {
-		this.client.logger.log({ content: `Disconnected from ${node.options.identifier}!`, type: 'warn' });
+		this.client.logger.log(`Disconnected nodes from ${node.options.identifier}!`, { type: 'debug' });
 	}
 
 };

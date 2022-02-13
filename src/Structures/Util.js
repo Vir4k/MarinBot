@@ -1,11 +1,9 @@
 const path = require('path');
 const { promisify } = require('util');
 const glob = promisify(require('glob'));
-const { REST } = require('@discordjs/rest');
-const { Routes } = require('discord-api-types/v9');
-const Command = require('./Command.js');
-const Interaction = require('./Interaction.js');
-const Event = require('./Event.js');
+const Command = require('./Command');
+const Event = require('./Event');
+const Interaction = require('./Interaction');
 
 module.exports = class Util {
 
@@ -23,6 +21,14 @@ module.exports = class Util {
 		return `${path.dirname(require.main.filename)}${path.sep}`;
 	}
 
+	checkOwner(userId) {
+		return this.client.owners.includes(userId);
+	}
+
+	formatArray(array, { style = 'short', type = 'conjunction' } = {}) {
+		return new Intl.ListFormat('en-US', { style, type }).format(array);
+	}
+
 	formatBytes(bytes) {
 		if (bytes === 0) return '0 Bytes';
 		const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
@@ -30,12 +36,24 @@ module.exports = class Util {
 		return `${parseFloat((bytes / Math.pow(1024, i)).toFixed(2))} ${sizes[i]}`;
 	}
 
-	checkOwner(target) {
-		return this.client.owners.includes(target);
+	formatPermissions(permissions) {
+		return permissions.toLowerCase()
+			.replace(/(^|"|_)(\S)/g, (string) => string.toUpperCase())
+			.replace(/_/g, ' ')
+			.replace(/To|And|In\b/g, (string) => string.toLowerCase())
+			.replace(/ Instant| Embedded/g, '')
+			.replace(/Guild/g, 'Server')
+			.replace(/Moderate/g, 'Timeout')
+			.replace(/Tts/g, 'Text-to-Speech')
+			.replace(/Use Vad/g, 'Use Voice Acitvity');
 	}
 
-	async loadPlayers() {
-		return await this.client.manager.init(this.client.applicationId);
+	truncateString(string, maxLen = 100) {
+		let i = string?.lastIndexOf(' ', maxLen);
+		if (i > maxLen - 3) {
+			i = string?.lastIndexOf(' ', i - 1);
+		}
+		return string?.length > maxLen ? `${string.substring(0, i)}...` : string;
 	}
 
 	async loadCommands() {
@@ -46,29 +64,13 @@ module.exports = class Util {
 				const File = require(commandFile);
 				if (!this.isClass(File)) throw new TypeError(`Command ${name} doesn't export a class.`);
 				const command = new File(this.client, name.toLowerCase());
-				if (!(command instanceof Command)) throw new TypeError(`Comamnd ${name} doesn't belong in Commands.`);
+				if (!(command instanceof Command)) throw new TypeError(`Command ${name} doesn't belong in Commands directory.`);
 				this.client.commands.set(command.name, command);
 				if (command.aliases.length) {
 					for (const alias of command.aliases) {
 						this.client.aliases.set(alias, command.name);
 					}
 				}
-			}
-		});
-	}
-
-	async loadInteractions() {
-		return glob(`${this.directory}Commands/Interaction/**/*.js`).then(interactions => {
-			for (const interactionFile of interactions) {
-				delete require.cache[interactionFile];
-				const { name } = path.parse(interactionFile);
-				const File = require(interactionFile);
-				if (!this.isClass(File)) throw new TypeError(`Interaction ${name} doesn't export a class.`);
-				const interaction = new File(this.client, name.toLowerCase());
-				if (!(interaction instanceof Interaction)) throw new TypeError(`Interaction ${name} doesn't belong in Interactions.`);
-				this.client.interactions.set(interaction.name, interaction);
-				const rest = new REST({ version: '9' }).setToken(this.client.token);
-				rest.post(Routes.applicationCommands(this.client.applicationId), { body: interaction });
 			}
 		});
 	}
@@ -81,9 +83,33 @@ module.exports = class Util {
 				const File = require(eventFile);
 				if (!this.isClass(File)) throw new TypeError(`Event ${name} doesn't export a class!`);
 				const event = new File(this.client, name);
-				if (!(event instanceof Event)) throw new TypeError(`Event ${name} doesn't belong in Events.`);
+				if (!(event instanceof Event)) throw new TypeError(`Event ${name} doesn't belong in Events directory.`);
 				this.client.events.set(event.name, event);
 				event.emitter[event.type](event.name, (...args) => event.run(...args));
+			}
+		});
+	}
+
+	async loadInteractions() {
+		return glob(`${this.directory}Commands/Interaction/**/*.js`).then(interactions => {
+			for (const interactionFile of interactions) {
+				delete require.cache[interactionFile];
+				const { name } = path.parse(interactionFile);
+				const File = require(interactionFile);
+				if (!this.isClass(File)) throw new TypeError(`Interaction ${name} doesn't export a class.`);
+				const interaction = new File(this.client, name);
+				if (!(interaction instanceof Interaction)) throw new TypeError(`Interaction ${name} doesn't belong in Interactions directory.`);
+				let command;
+				if (interaction.subCommand) {
+					if (interaction.subCommandGroup) {
+						command = `${interaction.name}-${interaction.subCommandGroup}-${interaction.subCommand}`;
+					} else {
+						command = `${interaction.name}-${interaction.subCommand}`;
+					}
+				} else {
+					command = interaction.name;
+				}
+				this.client.interactions.set(command, interaction);
 			}
 		});
 	}

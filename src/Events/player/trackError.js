@@ -1,4 +1,4 @@
-const Event = require('../../Structures/Event.js');
+const Event = require('../../Structures/Event');
 
 module.exports = class extends Event {
 
@@ -9,8 +9,8 @@ module.exports = class extends Event {
 	}
 
 	// eslint-disable-next-line no-unused-vars
-	async run(node, error) {
-		this.client.logger.log({ content: error.stack, type: 'error' });
+	async run(player, track, payload) {
+		await player.stop();
 	}
 
 };

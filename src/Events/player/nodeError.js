@@ -8,8 +8,8 @@ module.exports = class extends Event {
 		});
 	}
 
-	async run(player, track) {
-		player.addPreviousSong(track);
+	async run(node, error) {
+		this.client.logger.log(error.stack ? error.stack : error, { type: 'error' });
 	}
 
 };

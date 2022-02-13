@@ -8,8 +8,8 @@ module.exports = class extends Event {
 		});
 	}
 
-	async run(player, track) {
-		player.addPreviousSong(track);
+	async run(node) {
+		this.client.logger.log(`Connected nodes to ${node.options.identifier}!`, { type: 'ready' });
 	}
 
 };

@@ -1,4 +1,4 @@
-const Event = require('../../Structures/Event.js');
+const Event = require('../../Structures/Event');
 
 module.exports = class extends Event {
 
@@ -10,13 +10,17 @@ module.exports = class extends Event {
 
 	// eslint-disable-next-line no-unused-vars
 	async run(player, oldChannel, newChannel) {
-		const channel = await this.client.channels.cache.get(player.textChannel);
-
 		if (!newChannel) {
 			await player.destroy();
-			return channel.send({ content: 'Music stopped as I have been disconnected from the voice channel.' });
 		} else {
-			player.voiceChannel = newChannel;
+			player.set('moved', true);
+			player.setVoiceChannel(newChannel);
+			if (player.paused) return;
+
+			setTimeout(() => {
+				player.pause(true);
+				setTimeout(() => player.pause(false), this.client.ws.ping * 2);
+			}, this.client.ws.ping * 2);
 		}
 	}
 
