@@ -26,7 +26,7 @@
     "moment-timezone": "^0.5.34",
     "path": "^0.12.7",
     "semver": "^7.3.5",
-    "systeminformation": "^5.11.1",
+    "systeminformation": "^5.11.3",
     "util": "^0.12.4",
     "youtube-search-api": "^1.0.11"
   }
