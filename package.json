@@ -28,6 +28,6 @@
     "semver": "^7.3.5",
     "systeminformation": "^5.11.4",
     "util": "^0.12.4",
-    "youtube-search-api": "^1.0.11"
+    "youtube-search-api": "^1.1.0"
   }
 }
