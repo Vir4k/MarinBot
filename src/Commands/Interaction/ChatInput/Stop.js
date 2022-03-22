@@ -1,5 +1,6 @@
 const Interaction = require('../../../Structures/Interaction');
 const { GuildMember } = require('discord.js');
+const { ApplicationCommandType } = require('discord-api-types/v9');
 
 module.exports = class extends Interaction {
 
@@ -7,6 +8,7 @@ module.exports = class extends Interaction {
 		super(...args, {
 			name: 'stop',
 			description: 'Stops the music.',
+			type: ApplicationCommandType.ChatInput,
 			clientPermissions: ['CONNECT', 'SPEAK']
 		});
 	}

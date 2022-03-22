@@ -19,10 +19,10 @@ module.exports = class BaseClient extends Client {
 		});
 		this.validate(options);
 
+		this.interactions = new Collection();
 		this.commands = new Collection();
 		this.aliases = new Collection();
 		this.events = new Collection();
-		this.interactions = new Collection();
 		this.cooldowns = new Collection();
 		this.utils = new Util(this);
 
@@ -71,9 +71,9 @@ module.exports = class BaseClient extends Client {
 	}
 
 	async start(token = this.token) {
+		this.utils.loadInteractions();
 		this.utils.loadCommands();
 		this.utils.loadEvents();
-		this.utils.loadInteractions();
 		super.login(token);
 	}
 

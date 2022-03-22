@@ -1,12 +1,27 @@
 const Interaction = require('../../../Structures/Interaction');
 const { GuildMember } = require('discord.js');
+const { ApplicationCommandType, ApplicationCommandOptionType } = require('discord-api-types/v9');
 
 module.exports = class extends Interaction {
 
 	constructor(...args) {
 		super(...args, {
 			name: 'loop',
-			description: 'Changes the looping mode',
+			description: 'Changes the looping mode.',
+			type: ApplicationCommandType.ChatInput,
+			options: [{
+				name: 'mode',
+				description: 'The new looping mode.',
+				type: ApplicationCommandOptionType.String,
+				choices: [{
+					name: 'Track', value: 'track'
+				}, {
+					name: 'Queue', value: 'queue'
+				}, {
+					name: 'Disable', value: 'disable'
+				}],
+				required: true
+			}],
 			clientPermissions: ['SPEAK']
 		});
 	}

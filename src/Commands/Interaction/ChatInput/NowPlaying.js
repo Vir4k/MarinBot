@@ -1,5 +1,6 @@
 const Interaction = require('../../../Structures/Interaction');
 const { GuildMember, MessageEmbed } = require('discord.js');
+const { ApplicationCommandType, ApplicationCommandOptionType } = require('discord-api-types/v9');
 const { Colors } = require('../../../Utils/Constants');
 const Progress = require('../../../Modules/Progress');
 const moment = require('moment');
@@ -10,8 +11,13 @@ module.exports = class extends Interaction {
 	constructor(...args) {
 		super(...args, {
 			name: 'now',
-			subCommand: 'playing',
-			description: 'Display the playing track',
+			description: 'Display the playing track.',
+			type: ApplicationCommandType.ChatInput,
+			options: [{
+				name: 'playing',
+				description: 'Display the playing track.',
+				type: ApplicationCommandOptionType.Subcommand
+			}],
 			clientPermissions: ['SPEAK']
 		});
 	}

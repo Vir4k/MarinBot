@@ -1,12 +1,21 @@
 const Interaction = require('../../../Structures/Interaction');
 const { GuildMember } = require('discord.js');
+const { ApplicationCommandType, ApplicationCommandOptionType } = require('discord-api-types/v9');
 
 module.exports = class extends Interaction {
 
 	constructor(...args) {
 		super(...args, {
 			name: 'play',
-			description: 'Play a song in your voice channel',
+			description: 'Play a song in your voice channel.',
+			type: ApplicationCommandType.ChatInput,
+			options: [{
+				name: 'input',
+				description: 'A search term or a link.',
+				type: ApplicationCommandOptionType.String,
+				autocomplete: true,
+				required: true
+			}],
 			clientPermissions: ['CONNECT', 'SPEAK']
 		});
 	}

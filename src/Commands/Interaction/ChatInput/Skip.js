@@ -1,12 +1,20 @@
 const Interaction = require('../../../Structures/Interaction');
 const { GuildMember } = require('discord.js');
+const { ApplicationCommandType, ApplicationCommandOptionType } = require('discord-api-types/v9');
 
 module.exports = class extends Interaction {
 
 	constructor(...args) {
 		super(...args, {
 			name: 'skip',
-			description: 'Skips to the next song',
+			description: 'Skips to the next song.',
+			type: ApplicationCommandType.ChatInput,
+			options: [{
+				name: 'number',
+				description: 'Position in queue to skip to.',
+				type: ApplicationCommandOptionType.Integer,
+				required: false
+			}],
 			clientPermissions: ['CONNECT', 'SPEAK']
 		});
 	}

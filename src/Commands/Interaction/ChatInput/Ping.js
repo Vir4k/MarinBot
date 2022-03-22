@@ -1,11 +1,13 @@
 const Interaction = require('../../../Structures/Interaction');
+const { ApplicationCommandType } = require('discord-api-types/v9');
 
 module.exports = class extends Interaction {
 
 	constructor(...args) {
 		super(...args, {
 			name: 'ping',
-			description: 'Send a ping request.'
+			description: 'Send a ping request.',
+			type: ApplicationCommandType.ChatInput
 		});
 	}
 
